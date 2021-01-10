@@ -35,17 +35,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.ocpsoft.rewrite</groupId>
-			<artifactId>rewrite-servlet</artifactId>
-			<version>3.4.4.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ocpsoft.rewrite</groupId>
-			<artifactId>rewrite-config-prettyfaces</artifactId>
-			<version>3.4.4.Final</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -67,8 +56,47 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
+
 		</plugins>
 
 	</build>
+
+	<profiles>
+		<profile>
+			<id>bootable</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.wildfly.plugins</groupId>
+						<artifactId>wildfly-jar-maven-plugin</artifactId>
+						<version>2.0.0.Final</version>
+						<configuration>
+							<feature-pack-location>wildfly@maven(org.jboss.universe:community-universe)#21.0.2.Final</feature-pack-location>
+							<layers>
+								<layer>cdi</layer>
+								<layer>jsf</layer>
+								<layer>jaxrs</layer>
+								<layer>management</layer>
+							</layers>
+							<excluded-layers>
+								<layer>deployment-scanner</layer>
+							</excluded-layers>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>package</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
